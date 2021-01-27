@@ -1,0 +1,28 @@
+{
+  "name": "rulevalidationapi",
+  "version": "1.0.0",
+  "description": "Creation of a Rule Validation API: Node.js Backend Developer Role Test",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Timothy-py/RuleValidationAPI.git"
+  },
+  "keywords": [
+    "api",
+    "rule",
+    "validation"
+  ],
+  "author": "Timothy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Timothy-py/RuleValidationAPI/issues"
+  },
+  "homepage": "https://github.com/Timothy-py/RuleValidationAPI#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-validator": "^6.9.2"
+  }
+}
