@@ -101,73 +101,53 @@ router.post('/validate-rule', (req, res) => {
                 // check if 'first_level' is in data object
                 if(first_level in req_obj.data){
                     
-                    // check if 'first_level' value in data object is a valid number
-                    if(typeof(req_obj.data[first_level]) === 'number'){
-                        let data_field = req_obj.data[first_level]
+                    let data_field = req_obj.data[first_level]
 
-                        // check if accepted condition is passed
-                        const accepted_conditions = ["eq", "neq", "gt", "gte", "contains"]
-                        let passed_condition = req_obj.rule.condition
+                    // check if accepted condition is passed
+                    const accepted_conditions = ["eq", "neq", "gt", "gte", "contains"]
+                    let passed_condition = req_obj.rule.condition
 
-                        if(accepted_conditions.includes(passed_condition)){
-                            // check if condition_value is a valid integer
-                            if(typeof(req_obj.rule.condition_value) === 'number'){
-                                let condition_value = req_obj.rule.condition_value
+                    if(accepted_conditions.includes(passed_condition)){
+                        
+                        let condition_value = req_obj.rule.condition_value
 
-                                // ************NOW PERFORM THE RULE VALIDATION HERE*****************
-                                switch (passed_condition) {
-                                    case "eq":
-                                        if(data_field == condition_value){
-                                            passed_validation(res, first_level, passed_condition, condition_value)
-                                        }else{
-                                            failed_validation(res, first_level, passed_condition, condition_value)
-                                        }
-                                        break;
-                                    case "neq":
-                                        if(data_field != condition_value){
-                                            passed_validation(res, first_level, passed_condition, condition_value)
-                                        }else{
-                                            failed_validation(res, first_level, passed_condition, condition_value)
-                                        }
-                                        break;
-                                    case "gt":
-                                        if(data_field > condition_value){
-                                            passed_validation(res, first_level, passed_condition, condition_value)
-                                        }else{
-                                            failed_validation(res, first_level, passed_condition, condition_value)
-                                        }
-                                        break;
-                                    case "gte":
-                                        if(data_field >= condition_value){
-                                            passed_validation(res, first_level, passed_condition, condition_value)
-                                        }else{
-                                            failed_validation(res, first_level, passed_condition, condition_value)
-                                        }
-                                        break;
-                                    case "contains":
-                                        break
+                        // ************NOW PERFORM THE RULE VALIDATION HERE*****************
+                        switch (passed_condition) {
+                            case "eq":
+                                if(data_field == condition_value){
+                                    passed_validation(res, first_level, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, first_level, passed_condition, condition_value)
                                 }
-
-                                
-                            }else{
-                                res.status(400).json({
-                                    message: "condition_value should be a number.",
-                                    status: "error",
-                                    data: null
-                                })
-                            }
-
-                        }else{
-                            res.status(400).json({
-                                message: `Invalid condition ${passed_condition} passed`,
-                                status: "error",
-                                data: null
-                            })
+                                break;
+                            case "neq":
+                                if(data_field != condition_value){
+                                    passed_validation(res, first_level, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, first_level, passed_condition, condition_value)
+                                }
+                                break;
+                            case "gt":
+                                if(data_field > condition_value){
+                                    passed_validation(res, first_level, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, first_level, passed_condition, condition_value)
+                                }
+                                break;
+                            case "gte":
+                                if(data_field >= condition_value){
+                                    passed_validation(res, first_level, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, first_level, passed_condition, condition_value)
+                                }
+                                break;
+                            case "contains":
+                                break
                         }
 
                     }else{
                         res.status(400).json({
-                            message: `${first_level} should be a number.`,
+                            message: `Invalid condition ${passed_condition} passed`,
                             status: "error",
                             data: null
                         })
