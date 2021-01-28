@@ -45,6 +45,30 @@ router.post('/validate-rule', (req, res) => {
         })
     }
 
+    // check if the rule field is a valid JSON object and had just three keys
+    if(Object.keys(req_obj.rule).length != 3){
+        res.status(400).json({
+            message: "The Rule field passed has more or less keys than expected: Expected(3)",
+            status: "error",
+            data: {
+                isValidForRule: true
+            }
+        })
+    }
+
+    // check if the rule field contain the expected keys: field, condition, condition_value
+    if(!('field' in req_obj.rule) || !('condition' in req_obj.rule) || !('condition_value' in req_obj.rule)){
+        res.status(400).json({
+            message: "The Rule Field does not contain the expected keys: Expected(field, condition, condition_value)",
+            status: "error",
+            data: {
+                isValidForRule: true
+            }
+        })
+    }
+
+    
+
 
     res.status(200).json({
         message: "VALIDATION ROUTE"
