@@ -25,62 +25,48 @@ router.post('/validate-rule', (req, res) => {
 
     // check to see if req obj contain is a valid JSON and has only two keys
     if(Object.keys(req_obj).length != 2){
-        res.status(400).json({
-            message: "Invalid JSON payload passed.",
-            status: "error",
-            data: null
-        })
+
+        invalid_json(res)
+
     }
     
     // check if the req obj contain the expected keys: rule
     if(!('rule' in req_obj)){
-        res.status(400).json({
-            message: "rule is required.",
-            status: "error",
-            data: null
-        })
+        
+        required_field(res, "rule")
+
     }
     // check if the req obj contain the expected keys: data
     if(!('data' in req_obj)){
-        res.status(400).json({
-            message: "data is required.",
-            status: "error",
-            data: null
-        })
+        
+        required_field(res, "data")
+
     }
 
     // check if the rule field is a valid JSON object and had just three keys
     if(Object.keys(req_obj.rule).length != 3){
-        res.status(400).json({
-            message: "Invalid JSON payload passed.",
-            status: "error",
-            data: null
-        })
+        
+        invalid_json(res)
+
     }
 
     // check if the rule field contain the expected keys: field,
     if(!('field' in req_obj.rule)){
-        res.status(400).json({
-            message: "field is required.",
-            status: "error",
-            data: null
-        })
+        
+        required_field(res, "field")
+
     }
     // check if the rule field contain the expected keys:condition,
     if(!('condition' in req_obj.rule)){
-        res.status(400).json({
-            message: "condition is required.",
-            status: "error",
-            data: null
-        })
+        
+        required_field(res, "condition")
+
     }
     // check if the rule field contain the expected keys:condition_value
     if(!('condition_value' in req_obj.rule)){
-        res.status(400).json({
-            message: "condition_value is required.",
-            status: "error",
-            data: null
-        })
+        
+        required_field(res, "condition_value")
+
     }
 
     // **************************************************************************************************
@@ -160,11 +146,9 @@ router.post('/validate-rule', (req, res) => {
                     }
 
                 }else{
-                    res.status(400).json({
-                        message: `field ${first_level} is missing from data.`,
-                        status: "error",
-                        data: null
-                    })
+                    
+                    missing_field(res, first_level)
+
                 }
 
             // if request object.data is of type string
@@ -294,11 +278,7 @@ router.post('/validate-rule', (req, res) => {
                         })
                     }
                 }else{
-                    res.status(400).json({
-                        message: `field ${rule_field} is missing from data.`,
-                        status: "error",
-                        data: null
-                    })
+                    missing_field(res, rule_field)
                 }
             }
         } 
@@ -374,27 +354,17 @@ router.post('/validate-rule', (req, res) => {
                     }
 
                 }else{
-                    res.status(400).json({
-                        message: `field ${second_level} is missing from data.`,
-                        status: "error",
-                        data: null
-                    })    
+                    missing_field(res, second_level)
                 }
 
             }else{
-                res.status(400).json({
-                    message: `field ${first_level} is missing from data.`,
-                    status: "error",
-                    data: null
-                })
+                missing_field(res, first_level)
             }
 
         }else if(rule_field.split(".").length > 2){
-            res.status(400).json({
-                message: "Invalid JSON payload passed.",
-                status: "error",
-                data: null
-            })
+            
+            invalid_json(res)
+
         }
     }else{
         res.status(400).json({
@@ -406,21 +376,32 @@ router.post('/validate-rule', (req, res) => {
 
 })
 
-// testing route
-router.post('/tester', (req, res) => {
-    let req_obj = req.body; 
-
-    if((typeof(req_obj.data) == 'object') && !(req_obj.data instanceof Array)){
-        res.send("THIS IS AN OBJECT DATA")
-    }else if((typeof(req_obj.data) == 'object') && (req_obj.data instanceof Array)){
-        res.send("THIS IS AN ARRAY DATA")
-    }else if((typeof(req_obj.data) == 'string')){
-        res.send("THIS IS A STRING DATA")
-    }
-})
-
 
 // ********************FUNCTIONS***********************
+function missing_field(res, field){
+    res.status(400).json({
+        message: `field ${field} is missing from data.`,
+        status: "error",
+        data: null
+    })
+}
+
+function required_field(res, field){
+    res.status(400).json({
+        message: `${field} is required.`,
+        status: "error",
+        data: null
+    })
+}
+
+function invalid_json(res){
+    res.status(400).json({
+        message: "Invalid JSON payload passed.",
+        status: "error",
+        data: null
+    })
+}
+
 function passed_validation(res, field, field_value, condition, condition_value){
     res.status(200).json({
         message: `field ${field} successfully validated.`,
