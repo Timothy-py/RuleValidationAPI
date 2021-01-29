@@ -11,7 +11,7 @@ app.use(express.json());
 const validatorapi = require('./routes/validator')
 
 // specify root url path for app
-app.use('/api/validator', validatorapi)
+app.use('/', validatorapi)
 
 
 // configure app PORT
