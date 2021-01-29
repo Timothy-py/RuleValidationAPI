@@ -313,10 +313,65 @@ router.post('/validate-rule', (req, res) => {
             // check if first_level exist in data object
             if(first_level in req_obj.data){
                 // check if second_level exist in data object
-                if(second_level in req_obj.data.first_level){
+                if(second_level in req_obj.data[first_level]){
+
+                    let data_field = req_obj.data[first_level][second_level]
 
                     // check if accepted condition is passed
+                    const accepted_conditions = ["eq", "neq", "gt", "gte", "contains"]
+                    let passed_condition = req_obj.rule.condition
 
+                    if(accepted_conditions.includes(passed_condition)){
+                        
+                        let condition_value = req_obj.rule.condition_value
+                        let field = `${first_level}.${second_level}`
+
+                        // ************NOW PERFORM THE RULE VALIDATION HERE*****************
+                        switch (passed_condition) {
+                            case "eq":
+                                if(data_field == condition_value){
+                                    passed_validation(res, field, data_field, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, field, data_field, passed_condition, condition_value)
+                                }
+                                break;
+                            case "neq":
+                                if(data_field != condition_value){
+                                    passed_validation(res, field, data_field, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, field, data_field, passed_condition, condition_value)
+                                }
+                                break;
+                            case "gt":
+                                if(data_field > condition_value){
+                                    passed_validation(res, field, data_field, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, field, data_field, passed_condition, condition_value)
+                                }
+                                break;
+                            case "gte":
+                                if(data_field >= condition_value){
+                                    passed_validation(res, field, data_field, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, field, data_field, passed_condition, condition_value)
+                                }
+                                break;
+                            case "contains":
+                                if(data_field.includes(condition_value)){
+                                    passed_validation(res, field, data_field, passed_condition, condition_value)
+                                }else{
+                                    failed_validation(res, field, data_field, passed_condition, condition_value)
+                                }
+                                break
+                        }
+
+                    }else{
+                        res.status(400).json({
+                            message: `Invalid condition ${passed_condition} passed`,
+                            status: "error",
+                            data: null
+                        })
+                    }
 
                 }else{
                     res.status(400).json({
